@@ -537,7 +537,7 @@ Response:
 | `UPSTASH_VECTOR_REST_URL` | Upstash Vector REST API URL | Yes | - |
 | `UPSTASH_VECTOR_REST_TOKEN` | Upstash Vector REST API token | Yes | - |
 | `GEMINI_API_KEY` | Google Gemini API key for LLM disambiguation | Yes | - |
-| `GEMINI_MODEL` | Gemini model to use | No | `gemini-2.5-flash` |
+| `GEMINI_MODEL` | Gemini model to use | No | `gemini-2.5-pro` |
 | `EMBEDDING_MODEL` | HuggingFace embedding model | No | `all-MiniLM-L6-v2` |
 | `VECTOR_TOP_K` | Number of candidates to retrieve from vector search | No | `5` |
 | `VECTOR_SIMILARITY_THRESHOLD` | High confidence threshold | No | `0.85` |

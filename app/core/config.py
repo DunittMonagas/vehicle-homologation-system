@@ -24,7 +24,7 @@ class Config(BaseSettings):
 
     # Gemini LLM configuration
     gemini_api_key: str = ""
-    gemini_model: str = GeminiModel.GEMINI_2_5_FLASH.value
+    gemini_model: str = GeminiModel.GEMINI_2_5_PRO.value
 
     # Vehicle matching configuration
     vector_similarity_threshold: float = 0.85
