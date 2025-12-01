@@ -19,8 +19,7 @@ class Config(BaseSettings):
     upstash_vector_rest_token: str = ""
 
     # Embedding configuration
-    embedding_model: str = EmbeddingModel.OPENAI_TEXT_EMBEDDING_3_SMALL.value
-    llm_api_key: str = ""
+    embedding_model: str = EmbeddingModel.LOCAL_ALL_MINILM_L6_V2.value
 
     # Gemini LLM configuration
     gemini_api_key: str = ""
