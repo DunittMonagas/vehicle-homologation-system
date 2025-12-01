@@ -149,11 +149,14 @@ DB_HOST=db
 DB_PORT=5432
 
 # Embedding Configuration
+VECTOR_TOP_K=5
+VECTOR_SIMILARITY_THRESHOLD=0.85
+VECTOR_SIMILARITY_THRESHOLD_BEST_EFFORT=0.70
 EMBEDDING_MODEL=all-MiniLM-L6-v2
 
 # LLM Configuration (required)
 GEMINI_API_KEY=your-gemini-api-key-here
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-2.5-pro
 
 # Upstash Vector Configuration (required)
 UPSTASH_VECTOR_REST_URL=https://your-index-xxxxxx-us1-vector.upstash.io
@@ -413,7 +416,7 @@ Response:
   },
   {
     "description": "Toyota Corolla 2024",
-    "id_crabi": "TC-401"
+    "id_crabi": null
   },
   {
     "description": "Honda Civic 2020",
@@ -428,7 +431,7 @@ Response:
 curl -X POST "http://localhost:8000/api/v1/vehicles/match" \
   -H "Content-Type: application/json" \
   -d '{
-    "description": "Toyota Corolla 2024",
+    "description": "Toyota Corolla 2024 xle",
     "full_response": true
   }' | jq
 ```
