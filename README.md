@@ -6,6 +6,7 @@ A vehicle matching system that uses vector similarity search and LLM-powered dis
 
 - [Problem Statement](#problem-statement)
 - [Solution Architecture](#solution-architecture)
+- [Design Decisions](#design-decisions)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [API Endpoints](#api-endpoints)
@@ -101,6 +102,83 @@ This system uses a hybrid approach combining **semantic search** with **LLM disa
                        │     LLM      │
                        └──────────────┘
 ```
+
+---
+
+## Design Decisions
+
+This section explains the rationale behind the key technical decisions made for this solution.
+
+### 1. Why a Vector Database?
+
+We chose a vector database to enable **semantic search**. Traditional keyword-based searching would not work for this problem because:
+
+- It lacks flexibility to handle variations in terminology
+- It doesn't understand context or meaning
+- Exact matches would fail for synonyms like "MT" vs "Manual" or "CV" vs "HP"
+
+Vector databases allow us to find semantically similar descriptions even when the exact words differ.
+
+### 2. Vector Database Provider
+
+The vector database provider could be any provider that supports similarity search. Alternatives include:
+
+- **PostgreSQL with pgvector extension** - Good for keeping everything in one database
+- **Pinecone, Weaviate, Qdrant** - Specialized vector databases
+- **Upstash Vector** - Chosen for this project due to its generous free tier
+
+For this implementation, **Upstash's free tier** is sufficient for the expected workload.
+
+### 3. Local Embeddings with HuggingFace
+
+We use **HuggingFace's `all-MiniLM-L6-v2` model** to calculate embeddings locally. This approach has trade-offs:
+
+| Aspect | Local (HuggingFace) | Cloud (OpenAI, etc.) |
+|--------|---------------------|----------------------|
+| **Dimensions** | 384 | 1536+ |
+| **Cost** | Free | Pay per request |
+| **Latency** | Depends on hardware | Network dependent |
+| **Privacy** | Data stays local | Data sent to provider |
+
+The smaller vector size (384 vs 1536 dimensions) is acceptable for this use case because vehicle descriptions are short texts that don't require high-dimensional representations to capture their semantic meaning.
+
+### 4. Caching Strategy (Future Improvement)
+
+Although not currently implemented, a **Redis cache** would be a valuable addition to:
+
+- Save costs by avoiding recalculating embeddings for repeated queries
+- Reduce latency for frequently requested vehicle descriptions
+- Lower the load on both the vector database and the LLM
+
+This is marked as an optional component in the architecture diagram.
+
+### 5. LLM Provider Choice
+
+We use **Google Gemini** with free credits to minimize costs for this implementation. The system can be easily extended to support other LLM providers.
+
+The LLM is only used for disambiguation when the vector search returns multiple candidates or uncertain matches, not for every request.
+
+### 6. Hybrid Approach (Vector + LLM)
+
+A **hybrid solution** was chosen because:
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **Vector only** | Fast, cheap | Cannot resolve ambiguous cases with similar scores |
+| **LLM only** | High accuracy | Expensive, slow, overkill for obvious matches |
+| **Hybrid** | Best of both worlds | Slightly more complex |
+
+The hybrid approach:
+- Uses vector search for fast initial filtering
+- Returns immediately for high-confidence single matches (no LLM needed)
+- Only invokes the LLM when disambiguation is required
+- Balances cost, speed, and accuracy
+
+Additionally, techniques such as **structured direct prompting** and **few-shot learning** were not overlooked. The prompt used by the LLM has:
+- A clear structure with defined sections
+- A series of parameters to guide the model's behavior
+- A structured output format (JSON schema)
+- A set of examples that serve as a guide for the expected responses
 
 ---
 
