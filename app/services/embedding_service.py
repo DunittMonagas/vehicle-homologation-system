@@ -44,9 +44,7 @@ class EmbeddingService:
             return []
         
         try:
-            result = self.model.embed_query(text)
-            # logging.info(f"calculate_embedding len: {len(result)}, result: {result[:5]}")
-            return result
+            return self.model.embed_query(text)
         except Exception as e:
             logger.error(f"Error calculating embedding: {e}")
             raise

@@ -1,6 +1,4 @@
 from typing import Any, TypedDict
-import json
-import logging
 
 import requests
 
@@ -56,8 +54,6 @@ class VectorRepository:
         if namespace:
             payload["namespace"] = namespace
 
-        # logging.info(payload)
-
         response = requests.post(
             url,
             json=payload,
@@ -66,7 +62,5 @@ class VectorRepository:
         )
 
         response.raise_for_status()
-        result = response.json()
-        # logging.info(f"Vector query response:\n{json.dumps(result, indent=2)}")
-        return result
+        return response.json()
 
