@@ -248,7 +248,7 @@ UPSTASH_VECTOR_REST_TOKEN=your-upstash-token-here
 Start the application using Docker Compose:
 
 ```bash
-docker-compose up -d
+docker compose up --build
 ```
 
 This will start:
